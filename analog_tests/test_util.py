@@ -28,4 +28,5 @@ def test_internal_attribute_error():
     with pytest.raises(AttributeError) as excinfo:
         kind_map.__wrapped__
     assert str(excinfo.value) == (
-        "'LogEntryKindMap' object has no attribute '__wrapped__'")
+        "'LogEntryKindMap' object has no attribute '__wrapped__'"
+    )

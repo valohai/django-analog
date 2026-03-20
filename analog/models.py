@@ -33,7 +33,8 @@ class BaseLogEntry(models.Model):
     created_on = models.DateTimeField(auto_now_add=True, editable=False)
     user = models.ForeignKey(
         getattr(settings, "AUTH_USER_MODEL", "auth.User"),
-        null=True, on_delete=models.PROTECT
+        null=True,
+        on_delete=models.PROTECT,
     )
     message = models.CharField(max_length=256)
     identifier = models.CharField(max_length=64, blank=True)
@@ -53,15 +54,20 @@ class BaseLogEntry(models.Model):
 
     def save(self, *args, **kwargs):
         if self.pk:
-            raise ValueError("%r objects may not be modified" % self.__class__)
+            raise ValueError(f"{self.__class__!r} objects may not be modified")
         super().save(*args, **kwargs)
 
     @classmethod
     def add_log_entry(
         cls,
-        target, message, identifier=None, kind="other",
-        user=None, extra=None, save=True,
-        **kwargs
+        target,
+        message,
+        identifier=None,
+        kind="other",
+        user=None,
+        extra=None,
+        save=True,
+        **kwargs,
     ):
         """
         Add a log entry.
@@ -114,15 +120,15 @@ class BaseLogEntry(models.Model):
             identifier=force_str(identifier or "", errors="ignore")[:64],
             user=user,
             kind=kind,
-            **kwargs
+            **kwargs,
         )
 
-        has_extra_field = ('extra' in cls._meta._forward_fields_map)
+        has_extra_field = 'extra' in cls._meta._forward_fields_map
         if extra is not None:
             if not has_extra_field:
                 raise NoExtraField(
-                    'The %r class has no `extra` field,'
-                    'but non-None extra was passed!' % cls
+                    f'The {cls!r} class has no `extra` field, '
+                    'but non-None extra was passed!',
                 )
             kwargs['extra'] = extra
 

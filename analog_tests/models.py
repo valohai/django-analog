@@ -27,7 +27,9 @@ class SecondLoggedModel(models.Model):
 
 
 SecondLoggedModelLogEntry = define_log_model(
-    SecondLoggedModel, allow_null_target=True)
+    SecondLoggedModel,
+    allow_null_target=True,
+)
 
 
 class ExtraLogEntry(BaseLogEntry):
@@ -39,4 +41,6 @@ class ThirdLoggedModel(models.Model):
 
 
 ThirdLoggedModelLogEntry = define_log_model(
-    ThirdLoggedModel, base_class=ExtraLogEntry)
+    ThirdLoggedModel,
+    base_class=ExtraLogEntry,
+)

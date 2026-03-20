@@ -7,14 +7,14 @@ INSTALLED_APPS = (
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': ':memory:'
-    }
+        'NAME': ':memory:',
+    },
 }
 
 ANALOG_KINDS = {
-    "custom_kind": 3010
+    "custom_kind": 3010,
 }
 
 ANALOG_KIND_LABELS = {
-    "custom_kind": "very custom"
+    "custom_kind": "very custom",
 }

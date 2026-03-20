@@ -90,7 +90,7 @@ skip_covered = true
 extend-exclude = ["docs"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "T20"]
+select = ["E", "F", "I", "T20", "UP"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["analog"]

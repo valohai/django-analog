@@ -4,8 +4,12 @@ from django.db import models
 from analog import BaseLogEntry, LogEntryKind, define_log_model
 from analog.exceptions import NoExtraField, UnknownLogKind
 from analog_tests.models import (
-    FreeLogEntry, LoggedModel, LoggedModelLogEntry, SecondLoggedModel,
-    ThirdLoggedModel)
+    FreeLogEntry,
+    LoggedModel,
+    LoggedModelLogEntry,
+    SecondLoggedModel,
+    ThirdLoggedModel,
+)
 
 
 class RandomModel(models.Model):
@@ -22,6 +26,7 @@ def create_target_object(kind):
     if kind == "target":
         return LoggedModel.objects.create()
     else:
+
         class FakeModel:
             pk = None
 
@@ -51,13 +56,16 @@ def test_model_sanity():
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize("target_type,arg_type", [
-    ("free", "kwargs"),
-    ("target", "args"),
-    ("target", "kwargs"),
-    # Note: ("free", "args") is ommitted here, because free log entries
-    # do not support kwargless api
-])
+@pytest.mark.parametrize(
+    ("target_type", "arg_type"),
+    [
+        ("free", "kwargs"),
+        ("target", "args"),
+        ("target", "kwargs"),
+        # Note: ("free", "args") is ommitted here, because free log entries
+        # do not support kwargless api
+    ],
+)
 def test_add_log_entry(target_type, arg_type):
     target_object = create_target_object(target_type)
     if target_object.pk:
@@ -89,7 +97,8 @@ def test_log_entry_kind(target_object):
 def test_log_mutation(target_object):
     target_object.add_log_entry(
         message="benign action",
-        kind=LogEntryKind.EDIT)
+        kind=LogEntryKind.EDIT,
+    )
     log_entry = target_object.log_entries.last()
     log_entry.message = "sneak"
     with pytest.raises(ValueError):
@@ -101,7 +110,8 @@ def test_user_logging(admin_user, target_object):
     target_object.add_log_entry(
         message="audit",
         kind=LogEntryKind.AUDIT,
-        user=admin_user)
+        user=admin_user,
+    )
     log_entry = target_object.log_entries.last()
     assert log_entry.user.is_superuser  # we put an admin in
 
@@ -148,7 +158,7 @@ def test_invalid_kinds(target_object):
 def test_free_log_entries():
     fle = FreeLogEntry.add_log_entry(
         target=None,
-        message="hello world"
+        message="hello world",
     )
     assert fle.pk
     assert not fle.target

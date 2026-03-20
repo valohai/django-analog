@@ -45,7 +45,7 @@ def define_log_model(
     :type allow_null_target: bool
     :return: The log entry model.
     """
-    log_model_name = "%sLogEntry" % model_class.__name__
+    log_model_name = f"{model_class.__name__}LogEntry"
     allow_null_target = bool(allow_null_target)
 
     class Meta:
@@ -68,8 +68,14 @@ def define_log_model(
     log_entry_class = type(str(log_model_name), (base_class,), class_dict)
 
     def add_log_entry(
-        self, message, identifier=None, kind="other",
-        user=None, extra=None, save=True, **kwargs
+        self,
+        message,
+        identifier=None,
+        kind="other",
+        user=None,
+        extra=None,
+        save=True,
+        **kwargs,
     ):
         return log_entry_class.add_log_entry(
             target=self,
@@ -79,7 +85,7 @@ def define_log_model(
             user=user,
             extra=extra,
             save=save,
-            **kwargs
+            **kwargs,
         )
 
     setattr(model_class, "add_log_entry", add_log_entry)
