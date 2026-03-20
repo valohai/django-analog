@@ -12,8 +12,10 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys
 import os
+import re
+import sys
+from pathlib import Path
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -61,12 +63,14 @@ author = 'Anders Innovations'
 
 
 def get_version():
-    setupcfg_path = os.path.join(os.path.dirname(__file__), '..', 'setup.cfg')
-    with open(setupcfg_path, 'rb') as setupcfg:
-        for line in setupcfg.read().splitlines():
-            if line.startswith(b'version = '):
-                return line.split(b'=', 1)[1].strip().decode('utf-8')
-    return '0.0.0'
+    about_path = Path(__file__).resolve().parents[1] / "analog" / "__init__.py"
+    if match := re.search(
+        r'^__version__ = "([^"]+)"$',
+        about_path.read_text(encoding="utf-8"),
+        re.MULTILINE,
+    ):
+        return match.group(1)
+    raise RuntimeError(f"Unable to find version string in {about_path}")
 
 
 # The full version, including alpha/beta/rc tags.
@@ -80,7 +84,7 @@ version = '.'.join(release.split('.')[:2])
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = "en"
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:

@@ -8,8 +8,8 @@ Simple per-model log models for Django apps.
 Compatibility
 -------------
 
-* Django 2.2+, 3.0+
-* Python 3.6+
+* Django 5.2+
+* Python 3.11+
 
 Basic Usage
 -----------
@@ -31,24 +31,34 @@ Basic Usage
 Development
 -----------
 
-::
-
-    pip install -e .
-    pip install -r requirements-dev.txt
-
 Tests
 ~~~~~
 
 ::
 
-    py.test
+    uv run pytest
+
+Lint
+~~~~
+
+::
+
+    uv run ruff check .
+    uv run ruff format --check .
+
+Multi-version testing
+~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+    uv run tox
 
 Documentation
 ~~~~~~~~~~~~~
 
 ::
 
-    sphinx-build -b html docs docs/_build
+    uv run sphinx-build -b html docs docs/_build
 
 .. |Build Status|
    image:: https://github.com/andersinno/django-analog/workflows/Test/badge.svg

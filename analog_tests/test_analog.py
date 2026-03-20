@@ -13,8 +13,7 @@ class RandomModel(models.Model):
 
 
 @pytest.fixture(params=["free", "target"])
-@pytest.mark.django_db
-def target_object(request):
+def target_object(request, db):
     return create_target_object(request.param)
 
 

@@ -1,0 +1,117 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "django-analog"
+dynamic = ["version"]
+description = "Simple per-model log models for Django apps"
+readme = "README.rst"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+  { name = "Anders Innovations", email = "support@anders.fi" },
+]
+keywords = ["django", "logging"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Framework :: Django",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+  "Django>=5.2",
+]
+
+[project.urls]
+Homepage = "https://github.com/andersinno/django-analog"
+Repository = "https://github.com/andersinno/django-analog"
+Documentation = "https://django-analog.readthedocs.io/"
+
+[dependency-groups]
+lint = [
+  "ruff>=0.11.0",
+]
+test = [
+  "pytest>=8.3",
+  "pytest-cov>=6.0",
+  "pytest-django>=4.11",
+]
+docs = [
+  "Sphinx>=8.2",
+]
+dev = [
+  { include-group = "lint" },
+  { include-group = "test" },
+  { include-group = "docs" },
+  "tox>=4.24",
+]
+
+[tool.hatch.version]
+path = "analog/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["analog"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/analog",
+  "/analog_tests",
+]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "analog_tests.settings"
+addopts = "-ra --strict-markers --doctest-modules --cov=analog --cov-report=xml"
+norecursedirs = [".git", ".tox", ".venv", "venv*"]
+testpaths = ["analog_tests", "analog"]
+
+[tool.coverage.run]
+branch = true
+source = ["analog"]
+omit = [
+  "*/analog_tests/*",
+  "*/venv/*",
+  "*/virtualenv/*",
+  "*/.tox/*",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+
+[tool.ruff]
+extend-exclude = ["docs"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "T20"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["analog"]
+
+[tool.ruff.format]
+quote-style = "preserve"
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+env_list = lint, py311, py312, py313
+skip_missing_interpreters = true
+
+[testenv]
+dependency_groups = test
+commands =
+    pytest {posargs}
+
+[testenv:lint]
+dependency_groups = lint
+commands =
+    ruff check .
+    ruff format --check .
+"""
